@@ -1,17 +1,17 @@
+
 name: Build Anime Companion APK
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download project
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install Java
@@ -22,12 +22,13 @@ jobs:
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
-      - name: Extract project ZIP
+      - name: Extract project
         run: |
-          mkdir -p /tmp/anime-project
-          unzip -o AnimeCompanion-Android-Starter.zip -d /tmp/anime-project
-          cp -R /tmp/anime-project/. .
+          unzip -o AnimeCompanion-Android-Starter.zip -d /tmp/anime
+          cp -R /tmp/anime/. .
 
       - name: Install Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -42,3 +43,4 @@ jobs:
         with:
           name: AnimeCompanion-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+
